@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Weather App</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+
+        }
+        body{
+               background-image: url("image/tom-barrett-hgGplX3PFBg-unsplash.jpg");
+               background-position:center;
+               background-repeat: no-repeat;
+               background-size:cover;
+              min-height: 100vh;
+        }
+        .container{
+            width: 300px;
+            /* height: 400px; */
+          background-color: rgba(41, 249, 249, 0.363);
+            margin: auto;
+            margin-top: 100px;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        }
+        .pic,img{
+            width: 60px;
+            margin-top: 20px;
+            margin-left: 40px;
+            border-radius: 12px;
+        }
+        input{
+            width: 100%;
+            padding: 10px;
+           border-radius: 22px;
+           font-size: 1.0rem;
+          
+        }
+        .cel{
+            margin-top: 30px;
+            margin-left: 90px;
+            font-size: 1.8rem;
+            color: white;
+
+        }
+        
+        #loc{
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            /* background-color: red; */
+            padding: 12px;
+
+        }
+        .flex{
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .flex i{
+            color: brown;
+            cursor: pointer;
+            background-color: white;
+            padding: 7px;
+            border-radius: 25px;
+        }
+        .flex i:hover{
+            background-color: gray
+        }
+        .container2{
+            display: flex;
+            justify-content: space-around;
+            align-items: first baseline;
+            /* background-color: red; */
+            padding: 10px;
+        }
+        
+
+        .row img{
+            width: 30px;
+           margin-left: 30px;
+        }
+        .row p{
+            font-size: 1rem;
+            margin-left: 25px;
+        }
+        #chk{
+            display: none;
+        }
+        #error{
+            margin-top: 5px;
+            font-size: 1.0rem;
+            color: red;
+            display: none;
+        }
+        
+       
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flex"><input type="text"   id="search"  placeholder="enter the city name"  >
+
+            <i class="fa fa-search"style="font-size:24px" id="btn"></i>
+        </div>
+
+            <p id="error">invalid city</p>
+        
+
+        <div  id="chk">
+        <div class="pic"><img src= "image/cloudy-weather_192.gif" alt="logo" id="Weather_icon" ></div>
+
+        <div class="cel" id="temp">°C</div>
+
+        <div id="loc"></div>
+
+        <div class="container2">
+        <div class="row">
+            <img src="/image/river.png" alt="">
+            <p id="Humidity"></p>
+            <p>Humidity</p>
+        </div>
+
+        <div class="row">
+            <img src="/image/wind_icon.png" alt="">
+            <p id="wind"></p>
+            <p>Wind speed</p>
+        </div>
+       
+        </div>
+
+        </div>
+
+    <script>
+        // Api key
+       const Api_key = "ac086caa7fb1971a24d638c4f0df5493";
+
+    //    Api url
+       const Api_url= "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+       let serachbox = document.getElementById("search");
+       let searchbtn = document.getElementById("btn");
+       let image = document.getElementById("Weather_icon");
+      
+    //    Api call for weather app
+       async function checkweather(city)
+       {
+        let response = await fetch(Api_url + city + `&appid=${Api_key}`);
+
+        if(response.status==404)
+        {
+            document.getElementById("error").style.display = "block";
+
+            document.getElementById("chk").style.display = "none";
+
+        }
+
+        else
+        {
+
+        let data = await response.json();
+
+        let location =  document.getElementById("loc");
+
+        let temp = document.getElementById("temp");
+
+        let Humidity = document.getElementById("Humidity");
+
+        let wind_speed =document.getElementById("wind");
+
+        location.innerHTML = data.name;
+
+        temp.innerHTML =  Math.round( data.main.temp)+ " °C ";
+
+        Humidity.innerHTML = data.main.humidity + "%";
+        
+        wind_speed.innerHTML = Math.round(data.wind.speed) + " km/h";
+
+        console.log(data);
+         
+        if(data.weather[0].main=="Cloud")
+        {
+          image.src ="image/cloudy-weather_192.gif";
+        }
+
+        else if(data.weather[0].main=="Clear")
+        {
+            image.src ="/image/sun_192.gif";
+        }
+
+        else if(data.weather[0].main=="Rain")
+        {
+            image.src ="/image/rain.gif";
+        }
+
+        else if(data.weather[0].main=="Dizzle")
+        {
+            image.src ="/image/drizzle.gif";
+        }
+
+        else if(data.weather[0].main=="Mist")
+        {
+            image.src ="/image/mist.gif";
+        }
+
+        document.getElementById("chk").style.display = "block";
+
+        document.getElementById("error").style.display = "none";
+
+
+
+        }
+
+          
+        
+
+            
+        }
+        
+       
+       searchbtn.addEventListener("click", ()=>{
+
+        checkweather(serachbox.value);
+
+       }
+
+       )
+       
+    </Script>
+    
+</body>
+</html>
